@@ -5,11 +5,12 @@ import { OrderService } from '../../../services/order.service';
 import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { StatusBadgeDirective } from '../../../directives/status-badge';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [SidebarComponent, CommonModule, RouterLink],
+  imports: [SidebarComponent, CommonModule, RouterLink, StatusBadgeDirective],
   template: `
     <div class="layout-wrapper">
       <app-sidebar role="CLIENT"></app-sidebar>
@@ -88,7 +89,7 @@ import { RouterLink } from '@angular/router';
                                     {{ order.date | date:'mediumDate' }}
                                 </div>
                             </td>
-                            <td><span class="badge" [ngClass]="getBadgeClass(order.status)">{{ order.status }}</span></td>
+                            <td><span [appStatusBadge]="order.status">{{ order.status }}</span></td>
                             <td style="font-weight: 500">{{ order.total | currency:'COP':'symbol':'1.0-0' }}</td>
                             <td class="text-muted">{{ order.estimatedDate | date:'mediumDate' }}</td>
                             <td class="text-right">
