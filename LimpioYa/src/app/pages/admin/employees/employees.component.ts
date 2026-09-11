@@ -1,5 +1,4 @@
-
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { SidebarComponent } from '../../../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +17,7 @@ import { FormsModule } from '@angular/forms';
                 <p class="text-muted" style="margin:0">Controla el personal y los niveles de acceso.</p>
             </div>
             <div class="user-menu">
-                <button class="btn btn-primary" (click)="showModal = true">
+                <button class="btn btn-primary" (click)="openCreateModal()">
                     <span class="material-symbols-rounded" style="font-size: 1.2rem">badge</span>
                     Nuevo Empleado
                 </button>
@@ -50,7 +49,12 @@ import { FormsModule } from '@angular/forms';
                             </td>
                             <td class="text-muted">{{ emp.sede }}</td>
                             <td><span class="badge" [ngClass]="emp.status === 'Activo' ? 'badge-success' : 'badge-gray'">{{ emp.status }}</span></td>
-                            <td class="text-right"><button class="btn btn-secondary btn-sm">Editar</button></td>
+                            <td class="text-right">
+                                <button class="btn btn-secondary btn-sm" (click)="openEditModal(emp)">
+                                    <span class="material-symbols-rounded" style="font-size: 1rem">edit</span>
+                                    Editar
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -59,52 +63,59 @@ import { FormsModule } from '@angular/forms';
       </main>
     </div>
     
-    <!-- Modal Nuevo Empleado -->
+    <!-- Modal Nuevo / Editar Empleado -->
     <div class="modal-backdrop" *ngIf="showModal">
         <div class="modal card" style="max-width: 500px; width: 100%">
             <div class="flex-between mb-4">
-                <h2 style="font-size: 1.25rem; margin:0">Añadir Personal</h2>
-                <button class="btn btn-secondary btn-sm" (click)="showModal = false" style="padding: 0.25rem; border: none; box-shadow: none">
+                <h2 style="font-size: 1.25rem; margin:0">{{ isEditing ? 'Editar Empleado' : 'Añadir Personal' }}</h2>
+                <button class="btn btn-secondary btn-sm" (click)="closeModal()" style="padding: 0.25rem; border: none; box-shadow: none">
                     <span class="material-symbols-rounded">close</span>
                 </button>
             </div>
             
             <div class="alert alert-success mb-4" *ngIf="successMsg" style="background: var(--success-bg); color: var(--success-text); padding: 1rem; border-radius: var(--radius-md)">
-                Empleado añadido correctamente (Simulación).
+                {{ successMsg }}
             </div>
             
             <form (ngSubmit)="saveEmployee()" *ngIf="!successMsg">
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" class="form-control" required placeholder="Ej. Roberto Sánchez">
+                    <input type="text" class="form-control" required [(ngModel)]="currentEmployee.name" name="name" placeholder="Ej. Roberto Sánchez">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico (Acceso)</label>
-                    <input type="email" class="form-control" required placeholder="roberto@limpioya.com">
+                    <input type="email" class="form-control" required [(ngModel)]="currentEmployee.email" name="email" placeholder="roberto@limpioya.com">
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
                         <label>Rol</label>
-                        <select class="form-control">
+                        <select class="form-control" [(ngModel)]="currentEmployee.role" name="role">
                             <option>Repartidor</option>
-                            <option>Auxiliar de lavandería</option>
+                            <option>Auxiliar</option>
                             <option>Supervisor</option>
                             <option>Gerente</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Sede</label>
-                        <select class="form-control">
+                        <select class="form-control" [(ngModel)]="currentEmployee.sede" name="sede">
                             <option>Sede Norte</option>
                             <option>Sede Central</option>
                             <option>Sede Sur</option>
                         </select>
                     </div>
                 </div>
+                <div class="form-group" *ngIf="isEditing">
+                    <label>Estado</label>
+                    <select class="form-control" [(ngModel)]="currentEmployee.status" name="status">
+                        <option>Activo</option>
+                        <option>Inactivo</option>
+                    </select>
+                </div>
                 
                 <div class="flex-between mt-4">
-                    <button type="button" class="btn btn-secondary" (click)="showModal = false">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Empleado</button>
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">{{ isEditing ? 'Guardar Cambios' : 'Añadir Empleado' }}</button>
                 </div>
             </form>
         </div>
@@ -118,7 +129,17 @@ import { FormsModule } from '@angular/forms';
 })
 export class EmployeesComponent {
     showModal = false;
-    successMsg = false;
+    isEditing = false;
+    successMsg = '';
+    editingIndex = -1;
+
+    currentEmployee: any = {
+        name: '',
+        email: '',
+        role: 'Auxiliar',
+        sede: 'Sede Central',
+        status: 'Activo'
+    };
     
     employees = [
         { name: 'Admin Principal', email: 'admin@limpioya.com', role: 'Gerente', sede: 'Sede Central', status: 'Activo' },
@@ -126,12 +147,44 @@ export class EmployeesComponent {
         { name: 'Roberto Sánchez', email: 'rsanchez@limpioya.com', role: 'Repartidor', sede: 'Sede Norte', status: 'Activo' },
         { name: 'Miguel Torres', email: 'mtorres@limpioya.com', role: 'Auxiliar', sede: 'Sede Sur', status: 'Inactivo' }
     ];
+
+    openCreateModal() {
+        this.isEditing = false;
+        this.editingIndex = -1;
+        this.currentEmployee = {
+            name: '',
+            email: '',
+            role: 'Auxiliar',
+            sede: 'Sede Central',
+            status: 'Activo'
+        };
+        this.successMsg = '';
+        this.showModal = true;
+    }
+
+    openEditModal(emp: any) {
+        this.isEditing = true;
+        this.editingIndex = this.employees.indexOf(emp);
+        this.currentEmployee = { ...emp };
+        this.successMsg = '';
+        this.showModal = true;
+    }
+
+    closeModal() {
+        this.showModal = false;
+        this.successMsg = '';
+    }
     
     saveEmployee() {
-        this.successMsg = true;
+        if (this.isEditing && this.editingIndex !== -1) {
+            this.employees[this.editingIndex] = { ...this.currentEmployee };
+            this.successMsg = 'Datos del empleado actualizados con éxito.';
+        } else {
+            this.employees.unshift({ ...this.currentEmployee });
+            this.successMsg = 'Empleado añadido correctamente al equipo.';
+        }
         setTimeout(() => {
-            this.showModal = false;
-            this.successMsg = false;
-        }, 2000);
+            this.closeModal();
+        }, 1500);
     }
 }
