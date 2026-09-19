@@ -1,5 +1,4 @@
-
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { SidebarComponent } from '../../../shared/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -45,7 +44,12 @@ import { FormsModule } from '@angular/forms';
                             <td>{{ client.phone }}</td>
                             <td><span style="font-weight: 600">{{ client.orders }}</span> pedidos</td>
                             <td><span class="badge" [ngClass]="client.status === 'Activo' ? 'badge-success' : 'badge-gray'">{{ client.status }}</span></td>
-                            <td class="text-right"><button class="btn btn-secondary btn-sm">Ver info</button></td>
+                            <td class="text-right">
+                                <button class="btn btn-secondary btn-sm" (click)="openClientDetail(client)">
+                                    <span class="material-symbols-rounded" style="font-size: 1rem">visibility</span>
+                                    Ver info
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -89,6 +93,37 @@ import { FormsModule } from '@angular/forms';
             </form>
         </div>
     </div>
+
+    <!-- Modal Detalle Cliente -->
+    <div class="modal-backdrop" *ngIf="showDetailModal && selectedClient">
+        <div class="modal card" style="max-width: 450px; width: 100%">
+            <div class="flex-between mb-4">
+                <h2 style="font-size: 1.25rem; margin:0">Ficha del Cliente</h2>
+                <button class="btn btn-secondary btn-sm" (click)="showDetailModal = false" style="padding: 0.25rem; border: none; box-shadow: none">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem">
+                <div class="avatar" style="width: 50px; height: 50px; font-size: 1.25rem">{{ selectedClient.name[0] }}</div>
+                <div>
+                    <h3 style="margin: 0; font-size: 1.1rem">{{ selectedClient.name }}</h3>
+                    <span class="badge" [ngClass]="selectedClient.status === 'Activo' ? 'badge-success' : 'badge-gray'">{{ selectedClient.status }}</span>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; background: var(--bg-app); padding: 1rem; border-radius: var(--radius-md); font-size: 0.9rem">
+                <div><strong>Correo:</strong> {{ selectedClient.email }}</div>
+                <div><strong>Teléfono:</strong> {{ selectedClient.phone }}</div>
+                <div><strong>Total Pedidos Históricos:</strong> {{ selectedClient.orders }}</div>
+                <div><strong>Dirección habitual:</strong> Calle 123 #45-67, Edificio Limpio</div>
+            </div>
+
+            <div class="flex-between mt-4">
+                <button type="button" class="btn btn-primary w-100" (click)="showDetailModal = false">Cerrar</button>
+            </div>
+        </div>
+    </div>
   `,
   styles: [`
     .p-0 { padding: 0 !important; }
@@ -98,6 +133,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class ClientsComponent {
     showModal = false;
+    showDetailModal = false;
+    selectedClient: any = null;
     successMsg = false;
     
     clients = [
@@ -106,6 +143,11 @@ export class ClientsComponent {
         { name: 'Carlos Ruiz', email: 'carlos@ejemplo.com', phone: '3201112233', orders: 10, status: 'Activo' },
         { name: 'Ana Martínez', email: 'ana@ejemplo.com', phone: '3156667788', orders: 0, status: 'Inactivo' }
     ];
+
+    openClientDetail(client: any) {
+        this.selectedClient = client;
+        this.showDetailModal = true;
+    }
     
     saveClient() {
         this.successMsg = true;
