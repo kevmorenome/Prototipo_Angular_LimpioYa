@@ -1,0 +1,8 @@
+@if (order(); as o) {
+  <article class="panel">
+    <h3>{{ o.id }}</h3>
+    <ly-order-status [status]="o.status" />
+    <p>{{ money(o.total) }} · {{ o.delivery }}</p>
+    <a [routerLink]="['/cliente/pedidos', o.id]">Ver detalle ↗</a>
+  </article>
+}

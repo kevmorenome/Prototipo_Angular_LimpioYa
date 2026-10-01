@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+.status-select {
+  font-size: 12px;
+  padding: 8px;
+  min-width: 175px;
+}

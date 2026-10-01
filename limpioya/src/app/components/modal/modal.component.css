@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #132b4566;
+  backdrop-filter: blur(3px);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  width: 100%;
+  max-width: 570px;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 30px 100px #12283f35;
+}
+.modal h2 {
+  font-size: 21px;
+}
+.modal p {
+  font-size: 14px;
+}
+@media (max-width: 520px) {
+  .modal-backdrop {
+    padding: 12px;
+  }
+  .modal {
+    padding: 22px;
+  }
+}

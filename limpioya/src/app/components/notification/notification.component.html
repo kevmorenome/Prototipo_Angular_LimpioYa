@@ -1,0 +1,10 @@
+@if (notice.message()) {
+  <div class="toast" role="status" [class.error]="notice.error()">
+    <ly-icon [name]="notice.error() ? 'info' : 'check'" /><span>{{
+      notice.message()
+    }}</span
+    ><button aria-label="Cerrar notificación" (click)="notice.message.set('')">
+      ×
+    </button>
+  </div>
+}

@@ -1,0 +1,15 @@
+<ol class="timeline">
+  @for (s of statuses; track s; let i = $index) {
+    <li [class.done]="i <= index()" [class.current]="i === index()">
+      <span class="timeline-dot">{{ i < index() ? "✓" : i + 1 }}</span>
+      <div>
+        <strong>{{ s }}</strong>
+        @if (i === index()) {
+          <small>Estado actual</small>
+        } @else if (i < index()) {
+          <small>Completado</small>
+        }
+      </div>
+    </li>
+  }
+</ol>

@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.toast {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  max-width: calc(100% - 40px);
+  z-index: 100;
+  background: #183f38;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 35px #183f3830;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+.toast.error {
+  background: #932c3a;
+}
+.toast button {
+  color: white;
+  background: none;
+  font-size: 22px;
+}

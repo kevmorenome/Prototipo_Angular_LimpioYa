@@ -1,0 +1,55 @@
+@if (orders().length) {
+  <ly-data-table
+    ><table>
+      <thead>
+        <tr>
+          <th>Pedido</th>
+          @if (admin()) {
+            <th>Cliente</th>
+          }
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Total</th>
+          @if (admin()) {
+            <th>Pago</th>
+          }
+          <th>Entrega estimada</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (o of orders(); track o.id) {
+          <tr>
+            <td>
+              <a class="order-id" [routerLink]="[base(), o.id]">{{ o.id }}</a>
+            </td>
+            @if (admin()) {
+              <td>{{ o.client }}</td>
+            }
+            <td>{{ format(o.date) }}</td>
+            <td><ly-order-status [status]="o.status" /></td>
+            <td class="amount">{{ money(o.total) }}</td>
+            @if (admin()) {
+              <td>
+                <span
+                  class="badge"
+                  [class.success]="o.paid"
+                  [class.orange]="!o.paid"
+                  >{{ o.paid ? "Pagado" : "Pendiente" }}</span
+                >
+              </td>
+            }
+            <td>{{ format(o.delivery) }}</td>
+            <td>
+              <a class="text-link" [routerLink]="[base(), o.id]"
+                >Ver detalle ↗</a
+              >
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table></ly-data-table
+  >
+} @else {
+  <ly-empty-state />
+}

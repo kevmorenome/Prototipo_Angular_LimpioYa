@@ -1,0 +1,107 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">
+      {{ auth.user()?.role === "admin" ? "Administración" : "Mi espacio" }} /
+      Pedidos / Detalle
+    </div>
+    <h1>Detalle del pedido</h1>
+    <p>El cuidado de tus prendas, paso a paso.</p>
+  </div>
+  <a [routerLink]="back" class="text-link">← Volver a pedidos</a>
+</div>
+@if (order(); as o) {
+  <div class="detail-grid">
+    <div>
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">NÚMERO DE PEDIDO</span>
+            <h2 class="order-number">{{ o.id }}</h2>
+          </div>
+          <ly-order-status [status]="o.status" />
+        </div>
+        <div class="form-grid">
+          <div>
+            <span class="summary-label">Cliente</span>
+            <p>{{ o.client }}</p>
+          </div>
+          <div>
+            <span class="summary-label">Fecha del pedido</span>
+            <p>{{ o.date }}</p>
+          </div>
+          <div>
+            <span class="summary-label">Entrega estimada</span>
+            <p>{{ o.delivery }}</p>
+          </div>
+          <div>
+            <span class="summary-label">Estado del pago</span>
+            <p>
+              <span
+                class="badge"
+                [class.success]="o.paid"
+                [class.orange]="!o.paid"
+                >{{ o.paid ? "Pagado" : "Pendiente" }}</span
+              >
+              · {{ o.method }}
+            </p>
+          </div>
+        </div>
+        <h3>Servicios y prendas</h3>
+        @for (l of o.lines; track $index) {
+          <div class="line-item">
+            <div>
+              <strong>{{ l.garment }} · {{ l.service }}</strong>
+              <p>{{ l.quantity }} prendas × {{ money(l.price) }}</p>
+            </div>
+            <strong>{{ money(l.quantity * l.price) }}</strong>
+          </div>
+        }
+        <div class="summary-row summary-total">
+          <span>Total del pedido</span><strong>{{ money(o.total) }}</strong>
+        </div>
+        @if (auth.user()?.role === "cliente") {
+          <div class="actions">
+            <a class="btn primary" routerLink="/cliente/pagos">{{
+              o.paid ? "Ver factura" : "Pagar pedido"
+            }}</a
+            ><a class="btn secondary" routerLink="/cliente/agenda"
+              >Agendar recogida / entrega</a
+            >
+          </div>
+        }
+      </section>
+      <section class="panel">
+        <h2>Simular avance del pedido</h2>
+        <p>Cambia el estado para demostrar el seguimiento del proceso.</p>
+        <label
+          >Estado del pedido<select
+            [ngModel]="o.status"
+            (ngModelChange)="change($event)"
+          >
+            @for (s of statuses; track s) {
+              <option>{{ s }}</option>
+            }
+          </select></label
+        >
+        <div class="notice-box">
+          Demo — el cambio se refleja inmediatamente en todos los paneles de
+          este navegador.
+        </div>
+      </section>
+    </div>
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Seguimiento del pedido</h2>
+        <ly-icon name="truck" />
+      </div>
+      <ly-order-timeline [status]="o.status" />
+    </section>
+  </div>
+} @else {
+  <section class="panel">
+    <ly-empty-state
+      title="Pedido no encontrado"
+      text="El pedido no existe o no está asociado a tu cuenta."
+    />
+  </section>
+}

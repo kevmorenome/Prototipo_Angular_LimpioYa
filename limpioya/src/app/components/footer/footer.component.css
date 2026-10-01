@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+footer {
+  max-width: 1240px;
+  margin: auto;
+  border-top: 1px solid var(--line);
+  padding: 28px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
+}
+@media (max-width: 800px) {
+  footer {
+    flex-wrap: wrap;
+    padding: 22px;
+  }
+}

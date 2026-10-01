@@ -1,0 +1,108 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Mi espacio / Inicio</div>
+    <h1>
+      Hola, {{ auth.user()?.name?.split(" ")?.[0] }} <span class="wave">☀</span>
+    </h1>
+    <p>Tu ropa en buenas manos. Aquí tienes un resumen de tus pedidos.</p>
+  </div>
+  <a class="btn primary" routerLink="/cliente/pedidos/nuevo"
+    ><ly-icon name="plus" />Crear pedido</a
+  >
+</div>
+<section class="welcome-banner">
+  <div>
+    <span class="eyebrow">NOS ENCARGAMOS POR TI</span>
+    <h2>Una tarea menos en tu día.</h2>
+    <p>
+      Agenda una recogida y deja el cuidado de tus prendas en nuestras manos.
+    </p>
+    <a routerLink="/cliente/agenda"
+      >Programar recogida <ly-icon name="arrow"
+    /></a>
+  </div>
+  <div class="banner-art">
+    <ly-icon name="shirt" /><span class="art-bubble"></span
+    ><span class="art-check">✓</span>
+  </div>
+</section>
+<div class="stats-grid">
+  <ly-stat-card
+    label="Pedidos activos"
+    [value]="active()"
+    hint="En proceso de cuidado"
+    icon="bag"
+  /><ly-stat-card
+    label="Pedidos completados"
+    [value]="completed()"
+    hint="Prendas listas y entregadas"
+    icon="check"
+    tone="teal"
+  /><ly-stat-card
+    label="Próxima entrega"
+    [value]="nextDelivery()?.date || 'Sin programar'"
+    [hint]="
+      nextDelivery()
+        ? nextDelivery()!.time + ' · Entrega'
+        : 'Agenda tu próxima entrega'
+    "
+    icon="truck"
+  /><ly-stat-card
+    label="Pagos pendientes"
+    [value]="pending()"
+    hint="Consulta tus pagos y facturas"
+    icon="wallet"
+  />
+</div>
+<section class="panel orders-panel">
+  <div class="panel-heading">
+    <div>
+      <h2>Mis pedidos recientes</h2>
+      <p>Consulta el estado y los detalles de tus prendas.</p>
+    </div>
+    <a routerLink="/cliente/historial" class="text-link"
+      >Ver todos los pedidos <span>→</span></a
+    >
+  </div>
+  <ly-order-table [orders]="orders().slice().sort(recentOrders).slice(0, 5)" />
+</section>
+<div class="bottom-grid">
+  <section class="panel next-pickup">
+    <div class="panel-heading">
+      <h2>Tu próxima cita</h2>
+      <ly-icon name="calendar" />
+    </div>
+    @if (next(); as n) {
+      <div class="appointment-preview">
+        <span class="date-tile"
+          ><strong>{{ n.date.slice(-2) }}</strong
+          ><small>{{
+            n.date.slice(5, 7) === "10" ? "OCT" : "SEP"
+          }}</small></span
+        >
+        <div>
+          <span class="badge success">{{ n.type }} programada</span>
+          <h3>{{ n.time }} · {{ n.date }}</h3>
+          <p>{{ n.address }}</p>
+        </div>
+      </div>
+    } @else {
+      <p>No tienes citas programadas.</p>
+    }
+    <a class="text-link" routerLink="/cliente/agenda">Ver mi agenda →</a>
+  </section>
+  <section class="care-tip">
+    <span class="stat-icon teal"><ly-icon name="spark" /></span>
+    <div>
+      <span class="eyebrow">UN PEQUEÑO CONSEJO</span>
+      <h3>Cuidar tus prendas es cuidar lo que te acompaña.</h3>
+      <p>
+        Revisa las etiquetas de lavado y separa las prendas delicadas al crear
+        tu pedido.
+      </p>
+      <a class="text-link" routerLink="/cliente/pedidos/nuevo"
+        >Elegir un servicio →</a
+      >
+    </div>
+  </section>
+</div>

@@ -1,0 +1,22 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <section
+    class="modal"
+    lyAutoFocus
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="title()"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="panel-heading">
+      <h2>{{ title() }}</h2>
+      <button
+        class="icon-btn"
+        aria-label="Cerrar ventana"
+        (click)="close.emit()"
+      >
+        <ly-icon name="close" />
+      </button>
+    </div>
+    <ng-content />
+  </section>
+</div>

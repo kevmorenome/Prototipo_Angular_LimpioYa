@@ -1,0 +1,101 @@
+<div class="auth-page">
+  <section class="auth-story">
+    <ly-brand />
+    <div>
+      <span class="eyebrow">BIENVENIDO A LIMPIOYA</span>
+      <h1>
+        Un cuidado especial.<br />Una experiencia<br /><span>más simple.</span>
+      </h1>
+      <p>Tus prendas, tus pedidos y tu tiempo.<br />Todo en un solo lugar.</p>
+      <div class="auth-feature">
+        <ly-icon name="check" />Sigue tus pedidos paso a paso
+      </div>
+      <div class="auth-feature">
+        <ly-icon name="check" />Programa recogidas y entregas
+      </div>
+      <div class="auth-feature">
+        <ly-icon name="check" />Consulta tus pagos y facturas
+      </div>
+    </div>
+    <small>Prototipo académico · Gestión de lavandería</small>
+  </section>
+  <section class="auth-form-area">
+    <a class="back-link" routerLink="/">← Volver al inicio</a>
+    <div class="auth-form-card">
+      <span class="stat-icon"><ly-icon name="drop" /></span>
+      <h2>¡Qué bueno verte!</h2>
+      <p>Inicia sesión para continuar con tus pedidos.</p>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <label
+          >Correo electrónico<input
+            type="email"
+            formControlName="email"
+            placeholder="tu@correo.com"
+            autocomplete="username"
+        /></label>
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <small class="field-error">Ingresa un correo válido.</small>
+        }
+        <label
+          >Contraseña<input
+            type="password"
+            formControlName="password"
+            placeholder="Ingresa tu contraseña"
+            autocomplete="current-password"
+        /></label>
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <small class="field-error">Ingresa tu contraseña.</small>
+        }
+        <button
+          type="button"
+          class="text-link forgot"
+          (click)="recover.set(true)"
+        >
+          Recuperar contraseña
+        </button>
+        @if (error()) {
+          <p class="error-box" role="alert">{{ error() }}</p>
+        }
+        <button class="btn primary full" type="submit">
+          Iniciar sesión <ly-icon name="arrow" />
+        </button>
+      </form>
+      <p class="auth-switch">
+        ¿Aún no tienes cuenta? <a routerLink="/register">Registrarse</a>
+      </p>
+      <div class="demo-accounts">
+        <span class="eyebrow">PRUEBA EL PROTOTIPO</span>
+        <p>Demo — autenticación simulada</p>
+        <div>
+          <button class="demo-account" (click)="demo('cliente')">
+            <ly-icon name="user" /><span
+              ><strong>Entrar como cliente</strong
+              ><small>cliente&#64;limpioya.com · 123456</small></span
+            ><ly-icon name="arrow" /></button
+          ><button class="demo-account" (click)="demo('admin')">
+            <ly-icon name="grid" /><span
+              ><strong>Entrar como administrador</strong
+              ><small>admin&#64;limpioya.com · 123456</small></span
+            ><ly-icon name="arrow" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+@if (recover()) {
+  <ly-modal title="Recuperar contraseña" (close)="recover.set(false)"
+    ><p>
+      Esta es una demostración. Simularemos la solicitud sin enviar correos.
+    </p>
+    <form [formGroup]="recovery" (ngSubmit)="reset()">
+      <label
+        >Correo electrónico<input type="email" formControlName="email"
+      /></label>
+      @if (recovery.touched && recovery.invalid) {
+        <small class="field-error">Ingresa un correo válido.</small>
+      }
+      <button class="btn primary full">Simular recuperación</button>
+    </form></ly-modal
+  >
+}

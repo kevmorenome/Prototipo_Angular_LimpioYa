@@ -1,0 +1,80 @@
+<div class="chart-grid">
+  <section class="panel">
+    <div class="panel-heading">
+      <h2>Pedidos por estado</h2>
+      <span class="badge">{{ orders().length }} pedidos</span>
+    </div>
+    <div class="donut" [style.background]="gradient()">
+      <div class="donut-inner">
+        <strong>{{ orders().length }}</strong
+        ><small>Total de pedidos</small>
+      </div>
+    </div>
+    <div class="legend">
+      <div>
+        <span><i class="legend-delivered"></i>Entregados</span
+        ><strong>{{ completed() }}</strong>
+      </div>
+      <div>
+        <span><i></i>En proceso</span><strong>{{ progress() }}</strong>
+      </div>
+      <div>
+        <span><i class="legend-received"></i>Recibidos</span
+        ><strong>{{ received() }}</strong>
+      </div>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="panel-heading">
+      <div>
+        <h2>Ingresos por día</h2>
+        <p>Pagos aprobados en el período</p>
+      </div>
+      <span class="badge success">COP</span>
+    </div>
+    <div class="bar-chart">
+      @for (r of revenues(); track r.day) {
+        <div
+          class="bar-group"
+          [attr.aria-label]="r.day + ': ' + money(r.value)"
+        >
+          <span>{{ money(r.value) }}</span>
+          <div
+            class="bar"
+            [style.height.%]="(r.value / maxRevenue()) * 80 + 2"
+            [attr.title]="money(r.value)"
+          ></div>
+          <small>{{ r.day.slice(8) }}/{{ r.day.slice(5, 7) }}</small>
+        </div>
+      } @empty {
+        <p>No hay ingresos en este período.</p>
+      }
+    </div>
+    <p class="chart-caption">
+      Últimos 7 días con pedidos dentro del período seleccionado · Datos locales
+    </p>
+  </section>
+</div>
+<section class="panel" class="services-chart">
+  <div class="panel-heading">
+    <div>
+      <h2>Servicios más solicitados</h2>
+      <p>Cantidad de prendas por servicio</p>
+    </div>
+  </div>
+  <div class="service-bars">
+    @for (s of services(); track s.name) {
+      <div>
+        <div class="service-bar-label">
+          <span>{{ s.name }}</span
+          ><strong>{{ s.count }} prendas</strong>
+        </div>
+        <div class="track">
+          <div [style.width.%]="(s.count / maxServices()) * 100"></div>
+        </div>
+      </div>
+    } @empty {
+      <p>No hay servicios en este período.</p>
+    }
+  </div>
+</section>

@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+.timeline {
+  padding: 0;
+  list-style: none;
+  margin: 5px 0;
+}
+.timeline li {
+  position: relative;
+  padding: 0 0 25px;
+  display: flex;
+  gap: 15px;
+  align-items: start;
+}
+.timeline li:not(:last-child):before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 14px;
+  bottom: 0;
+  width: 2px;
+  background: #e8edf3;
+}
+.timeline li.done:before {
+  background: #9ddad1;
+}
+.timeline li:last-child {
+  padding-bottom: 0;
+}
+.timeline-dot {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e1e8f0;
+  border-radius: 50%;
+  background: #f6f8fb;
+  color: #a1aebc;
+  font-size: 12px;
+  position: relative;
+  z-index: 1;
+}
+.timeline li.done .timeline-dot {
+  background: #def4ef;
+  color: #1d9c82;
+  border-color: #def4ef;
+}
+.timeline li.current .timeline-dot {
+  background: var(--blue);
+  color: white;
+  box-shadow: 0 0 0 4px #e8f2ff;
+}
+.timeline li strong {
+  font-size: 13px;
+  color: #93a0b0;
+}
+.timeline li.done strong {
+  color: #4c637a;
+}
+.timeline li.current strong {
+  color: var(--blue);
+}
+.timeline li small {
+  display: block;
+  font-size: 10px;
+}
+.timeline li strong {
+  font-size: 14px;
+}
+.timeline li small {
+  font-size: 12px;
+}

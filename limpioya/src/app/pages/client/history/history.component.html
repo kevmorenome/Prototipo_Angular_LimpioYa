@@ -1,0 +1,39 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Mi espacio / Mis pedidos</div>
+    <h1>Historial de Pedidos</h1>
+    <p>Todos tus pedidos y su seguimiento, en un solo lugar.</p>
+  </div>
+  <a class="btn primary" routerLink="/cliente/pedidos/nuevo"
+    ><ly-icon name="plus" />Crear pedido</a
+  >
+</div>
+<section class="panel">
+  <div class="filters">
+    <div class="filter-search">
+      <ly-icon name="search" /><input
+        aria-label="Buscar pedido"
+        placeholder="Buscar por número de pedido…"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </div>
+    <select
+      aria-label="Filtrar por estado"
+      [ngModel]="status()"
+      (ngModelChange)="status.set($event)"
+    >
+      <option value="">Todos los estados</option>
+      @for (s of statuses; track s) {
+        <option>{{ s }}</option>
+      }</select
+    ><label
+      >Fecha del pedido<input
+        type="date"
+        [ngModel]="date()"
+        (ngModelChange)="date.set($event)" /></label
+    ><button class="text-link" (click)="clear()">Limpiar filtros</button>
+  </div>
+  <p class="results-count">{{ orders().length }} pedidos encontrados</p>
+  <ly-order-table [orders]="orders()" />
+</section>

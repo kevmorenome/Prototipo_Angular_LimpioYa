@@ -1,0 +1,10 @@
+<article class="stat-card">
+  <div class="stat-top">
+    <span>{{ label() }}</span
+    ><span class="stat-icon" [class.teal]="tone() === 'teal'"
+      ><ly-icon [name]="icon()"
+    /></span>
+  </div>
+  <strong>{{ value() }}</strong
+  ><small>{{ hint() }}</small>
+</article>

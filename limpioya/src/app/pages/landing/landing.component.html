@@ -1,0 +1,131 @@
+<ly-navbar />
+<main class="landing">
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="eyebrow"
+        ><span class="mini-dot"></span> TU LAVANDERÍA, MÁS SIMPLE</span
+      >
+      <h1>Ropa impecable.<br />Un día más <span>libre.</span></h1>
+      <p>
+        Todo el cuidado que tus prendas necesitan, en un solo lugar. Programa
+        una recogida, sigue tu pedido y ten todo bajo control.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary large" routerLink="/register"
+          >Registrarse <ly-icon name="arrow" /></a
+        ><a class="btn secondary large" routerLink="/login">Iniciar sesión</a>
+      </div>
+      <div class="hero-proof">
+        <span class="proof-icon"><ly-icon name="shield" /></span
+        ><span
+          >Simple de usar. Fácil de seguir.<small
+            >Sistema de Gestión de Lavandería</small
+          ></span
+        >
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="visual-dots"></div>
+      <div class="washer">
+        <div class="washer-controls">
+          <span>LimpioYa</span><i></i><b>02:30</b>
+          <div class="dial"></div>
+        </div>
+        <div class="washer-door">
+          <div class="washer-glass">
+            <div class="cloth cloth-one"></div>
+            <div class="cloth cloth-two"></div>
+            <div class="bubble b1"></div>
+            <div class="bubble b2"></div>
+            <div class="bubble b3"></div>
+          </div>
+        </div>
+        <div class="washer-foot"></div>
+      </div>
+      <div class="floating-card delivery-card">
+        <span class="stat-icon teal"><ly-icon name="truck" /></span>
+        <div>
+          <strong>Tu ropa, a tu puerta</strong
+          ><small>Recogida y entrega programadas</small>
+        </div>
+        <span class="round-check">✓</span>
+      </div>
+      <div class="floating-card ready-card">
+        <span class="stat-icon"><ly-icon name="shirt" /></span>
+        <div>
+          <strong>Prendas listas</strong><small>Cuidado en cada detalle</small>
+        </div>
+      </div>
+      <span class="spark-decoration">✧</span>
+    </div>
+  </section>
+  <section class="benefits" id="beneficios">
+    <div class="section-intro">
+      <span class="eyebrow">MENOS PENDIENTES, MÁS TRANQUILIDAD</span>
+      <h2>El cuidado de tu ropa, sin complicaciones.</h2>
+      <p>Una experiencia organizada desde la recogida hasta la entrega.</p>
+    </div>
+    <div class="benefit-grid">
+      <article>
+        <span class="stat-icon"><ly-icon name="calendar" /></span>
+        <h3>A tu ritmo</h3>
+        <p>Agenda recogidas y entregas cuando mejor te convenga.</p>
+      </article>
+      <article>
+        <span class="stat-icon teal"><ly-icon name="bag" /></span>
+        <h3>Siempre al tanto</h3>
+        <p>Consulta el estado de tus prendas en cada etapa del proceso.</p>
+      </article>
+      <article>
+        <span class="stat-icon violet"><ly-icon name="card" /></span>
+        <h3>Todo en un lugar</h3>
+        <p>Gestiona pedidos, pagos y facturas desde tu panel personal.</p>
+      </article>
+    </div>
+  </section>
+  <section class="how" id="como-funciona">
+    <div>
+      <span class="eyebrow">ASÍ DE FÁCIL</span>
+      <h2>¿Cómo funciona?</h2>
+      <p>Tres pasos para quitar una tarea de tu lista.</p>
+    </div>
+    <div class="steps">
+      <article>
+        <span>01</span>
+        <h3>Crea tu pedido</h3>
+        <p>Elige el servicio y las prendas que quieres cuidar.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>Agenda la recogida</h3>
+        <p>Indica cuándo y dónde recogemos tus prendas.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>Recibe y disfruta</h3>
+        <p>Sigue el proceso y recibe tu ropa lista para usar.</p>
+      </article>
+    </div>
+  </section>
+  <section class="landing-services">
+    <div class="section-intro">
+      <span class="eyebrow">CUIDADO PARA CADA PRENDA</span>
+      <h2>Nuestros servicios</h2>
+    </div>
+    <div class="service-grid">
+      @for (s of services.records().slice(0, 3); track s.id) {
+        <ly-service-card [service]="s" />
+      }
+    </div>
+  </section>
+  <section class="landing-cta">
+    <div>
+      <h2>Más tiempo para lo que importa.</h2>
+      <p>Comienza a gestionar tus prendas con LimpioYa.</p>
+    </div>
+    <a class="btn primary large" routerLink="/register"
+      >Crear mi cuenta <ly-icon name="arrow"
+    /></a>
+  </section>
+</main>
+<ly-footer />

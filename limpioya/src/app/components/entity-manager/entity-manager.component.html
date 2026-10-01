@@ -1,0 +1,192 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Administración / {{ title }}</div>
+    <h1>{{ title }}</h1>
+    <p>
+      {{
+        kind() === "clients"
+          ? "Conoce a tus clientes y consulta su historial."
+          : kind() === "employees"
+            ? "Organiza tu equipo y sus roles en la lavandería."
+            : "Define el cuidado que ofreces y sus precios."
+      }}
+    </p>
+  </div>
+  <button class="btn primary" (click)="open()">
+    <ly-icon name="plus" />Nuevo {{ singular }}
+  </button>
+</div>
+<section class="panel">
+  <div class="filters">
+    <div class="filter-search">
+      <ly-icon name="search" /><input
+        [attr.aria-label]="'Buscar ' + singular"
+        [placeholder]="'Buscar ' + singular + '…'"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </div>
+    <select
+      aria-label="Filtrar por actividad"
+      [ngModel]="filter()"
+      (ngModelChange)="filter.set($event)"
+    >
+      <option value="">Todos los estados</option>
+      <option value="true">Activos</option>
+      <option value="false">Inactivos</option>
+    </select>
+  </div>
+  <p class="results-count">{{ records().length }} registros encontrados</p>
+  @if (records().length) {
+    <ly-data-table
+      ><table>
+        <thead>
+          <tr>
+            <th>{{ kind() === "services" ? "Servicio" : "Nombre" }}</th>
+            @if (kind() === "services") {
+              <th>Descripción</th>
+              <th>Precio / prenda</th>
+            } @else {
+              <th>Correo</th>
+              @if (kind() === "clients") {
+                <th>Teléfono</th>
+                <th>Pedidos</th>
+              } @else {
+                <th>Rol</th>
+              }
+            }
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of records(); track r.id) {
+            <tr>
+              <td class="amount">
+                <span class="record-avatar">{{ r.name.slice(0, 1) }}</span
+                >{{ r.name }}
+              </td>
+              @if (kind() === "services") {
+                <td class="service-table-description">{{ r.description }}</td>
+                <td class="amount">{{ money(r.price || 0) }}</td>
+              } @else {
+                <td>{{ r.email }}</td>
+                @if (kind() === "clients") {
+                  <td>{{ r.phone }}</td>
+                  <td>{{ count(r.id) }}</td>
+                } @else {
+                  <td>{{ r.role }}</td>
+                }
+              }
+              <td>
+                <span
+                  class="badge"
+                  [class.success]="r.active"
+                  [class.orange]="!r.active"
+                  >{{ r.active ? "Activo" : "Inactivo" }}</span
+                >
+              </td>
+              <td>
+                <div class="actions">
+                  @if (kind() === "clients") {
+                    <button class="text-link" (click)="info.set(r)">
+                      Información</button
+                    ><button class="text-link" (click)="history.set(r)">
+                      Historial
+                    </button>
+                  }
+                  <button class="btn soft" (click)="open(r)">Editar</button
+                  ><button class="btn secondary" (click)="toggle(r)">
+                    {{ r.active ? "Desactivar" : "Activar" }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table></ly-data-table
+    >
+  } @else {
+    <ly-empty-state />
+  }
+</section>
+@if (modal()) {
+  <ly-modal
+    [title]="(editing() ? 'Editar ' : 'Nuevo ') + singular"
+    (close)="modal.set(false)"
+    ><form [formGroup]="form" (ngSubmit)="save()">
+      <label
+        >{{ kind() === "services" ? "Nombre del servicio" : "Nombre completo"
+        }}<input formControlName="name"
+      /></label>
+      @if (kind() === "services") {
+        <label
+          >Descripción<textarea formControlName="description"></textarea></label
+        ><label
+          >Precio por prenda (COP)<input
+            type="number"
+            min="100"
+            max="1000000"
+            formControlName="price"
+        /></label>
+      } @else {
+        <label
+          >Correo electrónico<input type="email" formControlName="email"
+        /></label>
+        @if (kind() === "clients") {
+          <label>Teléfono<input type="tel" formControlName="phone" /></label>
+        } @else {
+          <label
+            >Rol<select formControlName="role">
+              @for (role of roles; track role) {
+                <option>{{ role }}</option>
+              }
+            </select></label
+          >
+        }
+      }
+      <label
+        >Estado<select formControlName="active">
+          <option [ngValue]="true">Activo</option>
+          <option [ngValue]="false">Inactivo</option>
+        </select></label
+      >
+      @if (form.touched && form.invalid) {
+        <p class="error-box">
+          Completa los campos con datos válidos. El nombre requiere 3
+          caracteres; revisa el correo, teléfono o precio según corresponda.
+        </p>
+      }
+      <button class="btn primary full">Guardar {{ singular }}</button>
+    </form></ly-modal
+  >
+}
+@if (info(); as c) {
+  <ly-modal title="Información del cliente" (close)="info.set(null)"
+    ><span class="avatar profile-avatar">{{ c.name.slice(0, 1) }}</span>
+    <h2>{{ c.name }}</h2>
+    <div class="summary-row">
+      <span>Correo</span><strong>{{ c.email }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Teléfono</span><strong>{{ c.phone }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Pedidos</span><strong>{{ count(c.id) }}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Estado</span><strong>{{ c.active ? "Activo" : "Inactivo" }}</strong>
+    </div>
+    <button class="btn primary full" (click)="history.set(c); info.set(null)">
+      Ver historial
+    </button></ly-modal
+  >
+}
+@if (history(); as c) {
+  <ly-modal [title]="'Historial de ' + c.name" (close)="history.set(null)"
+    ><ly-order-table
+      [orders]="clientHistory(c.id)"
+      [admin]="true"
+      base="/admin/pedidos"
+  /></ly-modal>
+}

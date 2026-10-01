@@ -1,0 +1,51 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Mi espacio / Mi perfil</div>
+    <h1>Mi perfil</h1>
+    <p>Mantén tus datos listos para tu próxima recogida.</p>
+  </div>
+</div>
+<div class="split-grid">
+  <section class="panel">
+    <h2>Información personal</h2>
+    <p>Los cambios se guardan en este navegador.</p>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label
+        >Nombre completo<input
+          formControlName="name"
+          autocomplete="name" /></label
+      ><label
+        >Correo electrónico<input
+          [value]="auth.user()?.email"
+          readonly /></label
+      ><label
+        >Teléfono<input
+          type="tel"
+          formControlName="phone"
+          autocomplete="tel" /></label
+      ><label
+        >Dirección<textarea
+          formControlName="address"
+          autocomplete="street-address"
+        ></textarea>
+      </label>
+      @if (form.touched && form.invalid) {
+        <p class="error-box">
+          Revisa tu nombre, teléfono y dirección antes de guardar.
+        </p>
+      }
+      <button class="btn primary">Guardar cambios</button>
+    </form>
+  </section>
+  <section class="panel">
+    <span class="avatar profile-avatar">{{
+      auth.user()?.name?.slice(0, 1)
+    }}</span>
+    <h2>{{ auth.user()?.name }}</h2>
+    <p>{{ auth.user()?.email }}</p>
+    <span class="badge success">Cuenta de cliente · Demo</span>
+    <p class="section-note">
+      Esta cuenta utiliza autenticación simulada para la demostración académica.
+    </p>
+  </section>
+</div>

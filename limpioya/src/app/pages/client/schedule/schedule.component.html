@@ -1,0 +1,83 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Mi espacio / Agenda</div>
+    <h1>Agenda de recogida y entrega</h1>
+    <p>Elige un momento que se ajuste a tu día.</p>
+  </div>
+  <span class="badge">Recogidas y entregas a domicilio</span>
+</div>
+<div class="split-grid">
+  <section class="panel">
+    <div class="panel-heading">
+      <h2>Programar una cita</h2>
+      <ly-icon name="calendar" />
+    </div>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label
+        >Tipo de cita<select formControlName="type">
+          <option>Recogida</option>
+          <option>Entrega</option>
+        </select></label
+      >
+      <div class="form-grid">
+        <label
+          >Fecha<input
+            type="date"
+            [min]="minimum"
+            formControlName="date" /></label
+        ><label>Hora<input type="time" formControlName="time" /></label>
+      </div>
+      <label
+        >Dirección<textarea
+          formControlName="address"
+          placeholder="Calle, número, apartamento y ciudad"
+        ></textarea>
+      </label>
+      @if (form.touched && form.invalid) {
+        <p class="error-box">
+          Completa la fecha, hora y una dirección de al menos 8 caracteres.
+        </p>
+      }
+      <button class="btn primary full">
+        <ly-icon name="calendar" />Guardar cita
+      </button>
+    </form>
+    <p class="section-note">
+      Demo — la cita se guarda localmente y no solicita un servicio real.
+    </p>
+  </section>
+  <section class="panel">
+    <div class="panel-heading">
+      <h2>Mis citas</h2>
+      <span class="badge">{{ appointments().length }} programadas</span>
+    </div>
+    <div class="appointment-list">
+      @for (a of appointments(); track a.id) {
+        <article class="appointment-item">
+          <div>
+            <span class="badge" [class.success]="a.type === 'Entrega'">{{
+              a.type
+            }}</span>
+            <h3 class="appointment-title">{{ a.date }} · {{ a.time }}</h3>
+            <p>{{ a.address }}</p>
+            @if (a.date < minimum) {
+              <small>Cita pasada</small>
+            }
+          </div>
+          <button
+            class="icon-btn"
+            [attr.aria-label]="'Cancelar cita ' + a.date + ' ' + a.time"
+            (click)="remove(a.id)"
+          >
+            <ly-icon name="close" />
+          </button>
+        </article>
+      } @empty {
+        <ly-empty-state
+          title="Tu agenda está libre"
+          text="Programa tu primera recogida o entrega."
+        />
+      }
+    </div>
+  </section>
+</div>

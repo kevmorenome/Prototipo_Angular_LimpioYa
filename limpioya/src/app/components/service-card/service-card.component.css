@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.service-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px;
+  height: 100%;
+  background: white;
+}
+.service-card h3 {
+  margin-top: 20px;
+}
+.service-card p {
+  font-size: 14px;
+  min-height: 45px;
+}
+.service-card strong {
+  color: var(--blue);
+  font-size: 20px;
+}
+.service-card small {
+  font-weight: 400;
+  font-size: 13px;
+}
+@media (max-width: 800px) {
+  .service-card {
+    padding: 20px;
+  }
+}

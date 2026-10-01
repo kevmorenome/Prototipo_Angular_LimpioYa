@@ -1,0 +1,136 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Mi espacio / Pedidos / Nuevo</div>
+    <h1>Crear pedido</h1>
+    <p>Cuéntanos qué prendas necesitan un poco de cuidado.</p>
+  </div>
+  <a class="text-link" routerLink="/cliente/historial">Ver mis pedidos →</a>
+</div>
+@if (created()) {
+  <section class="panel">
+    <div class="success-circle">✓</div>
+    <h2>Pedido creado correctamente</h2>
+    <p>
+      Tu pedido {{ created() }} está recibido. Puedes consultar el seguimiento y
+      programar una recogida.
+    </p>
+    <div class="actions">
+      <a class="btn primary" [routerLink]="['/cliente/pedidos', created()]"
+        >Ver pedido</a
+      ><a class="btn secondary" routerLink="/cliente/agenda"
+        >Agendar recogida</a
+      >
+    </div>
+  </section>
+} @else {
+  <div class="split-grid">
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2>01 · Selecciona tus prendas</h2>
+          <p>Agrega tantos servicios y prendas como necesites.</p>
+        </div>
+        <ly-icon name="shirt" />
+      </div>
+      <form [formGroup]="form" (ngSubmit)="add()">
+        <div class="form-grid">
+          <label
+            >Servicio<select formControlName="service">
+              @for (s of services.records(); track s.id) {
+                @if (s.active) {
+                  <option [value]="s.name">{{ s.name }}</option>
+                }
+              }
+            </select></label
+          ><label
+            >Prenda<select formControlName="garment">
+              @for (g of garments; track g) {
+                <option>{{ g }}</option>
+              }
+            </select></label
+          ><label
+            >Cantidad<input
+              type="number"
+              min="1"
+              max="100"
+              step="1"
+              formControlName="quantity" /></label
+          ><label
+            >Precio por prenda<input [value]="money(price())" readonly
+          /></label>
+        </div>
+        @if (form.touched && form.invalid) {
+          <p class="error-box">
+            La cantidad debe ser un número entero entre 1 y 100.
+          </p>
+        }
+        <div class="summary-row">
+          <span>Subtotal de la selección</span
+          ><strong>{{ money(subtotal()) }}</strong>
+        </div>
+        <button class="btn soft full">
+          <ly-icon name="plus" />Agregar prenda al pedido
+        </button>
+      </form>
+      <div class="summary-label">Prendas agregadas</div>
+      @for (l of lines(); track $index) {
+        <div class="line-item">
+          <span
+            ><strong>{{ l.garment }} · {{ l.service }}</strong>
+            <p>{{ l.quantity }} × {{ money(l.price) }}</p></span
+          >
+          <div class="actions">
+            <strong class="amount">{{ money(l.quantity * l.price) }}</strong
+            ><button
+              class="icon-btn"
+              [attr.aria-label]="'Quitar ' + l.garment"
+              (click)="remove($index)"
+            >
+              <ly-icon name="close" />
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <ly-empty-state
+          title="Tu pedido empieza aquí"
+          text="Selecciona un servicio y agrega la primera prenda."
+        />
+      }
+    </section>
+    <section class="panel">
+      <h2>02 · Resumen del pedido</h2>
+      <p>Revisa tu selección antes de confirmar.</p>
+      <div class="summary-row">
+        <span>Cliente</span><strong>{{ auth.user()?.name }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Prendas</span><strong>{{ lines().length }} selecciones</strong>
+      </div>
+      @for (l of lines(); track $index) {
+        <div class="summary-row">
+          <span
+            >{{ l.quantity }} × {{ l.garment
+            }}<small class="service-caption">{{ l.service }}</small></span
+          ><strong>{{ money(l.quantity * l.price) }}</strong>
+        </div>
+      }
+      <div class="summary-row summary-total">
+        <span>Total</span><strong>{{ money(total()) }}</strong>
+      </div>
+      <div class="notice-box">
+        Entrega estimada: 3 días después de crear el pedido. La recogida se
+        programa en tu agenda.
+      </div>
+      <button
+        class="btn primary full"
+        [disabled]="!lines().length"
+        (click)="create()"
+      >
+        Crear pedido <ly-icon name="arrow" />
+      </button>
+      <p class="section-note">
+        Precios en pesos colombianos. Pedido y pago simulados.
+      </p>
+    </section>
+  </div>
+}

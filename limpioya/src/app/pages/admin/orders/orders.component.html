@@ -1,0 +1,100 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Administración / Pedidos</div>
+    <h1>Gestión de pedidos</h1>
+    <p>Organiza el trabajo y actualiza cada etapa del cuidado.</p>
+  </div>
+  <span class="badge">{{ store.records().length }} pedidos</span>
+</div>
+<section class="panel">
+  <div class="filters">
+    <div class="filter-search">
+      <ly-icon name="search" /><input
+        placeholder="Buscar pedido o cliente…"
+        aria-label="Buscar pedido o cliente"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </div>
+    <select
+      aria-label="Filtrar por estado"
+      [ngModel]="status()"
+      (ngModelChange)="status.set($event)"
+    >
+      <option value="">Todos los estados</option>
+      @for (s of statuses; track s) {
+        <option>{{ s }}</option>
+      }</select
+    ><select
+      aria-label="Filtrar por pago"
+      [ngModel]="payment()"
+      (ngModelChange)="payment.set($event)"
+    >
+      <option value="">Todos los pagos</option>
+      <option value="true">Pagados</option>
+      <option value="false">Pendientes</option></select
+    ><label
+      >Fecha<input
+        type="date"
+        [ngModel]="date()"
+        (ngModelChange)="date.set($event)" /></label
+    ><button class="text-link" (click)="clear()">Limpiar</button>
+  </div>
+  <p class="results-count">{{ orders().length }} pedidos encontrados</p>
+  @if (orders().length) {
+    <ly-data-table
+      ><table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Estado · editable</th>
+            <th>Total</th>
+            <th>Pago</th>
+            <th>Entrega</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (o of orders(); track o.id) {
+            <tr>
+              <td class="order-id">{{ o.id }}</td>
+              <td>{{ o.client }}</td>
+              <td>{{ o.date }}</td>
+              <td>
+                <select
+                  class="status-select"
+                  [attr.aria-label]="'Estado de ' + o.id"
+                  [ngModel]="o.status"
+                  (ngModelChange)="change(o.id, $event)"
+                >
+                  @for (s of statuses; track s) {
+                    <option>{{ s }}</option>
+                  }
+                </select>
+              </td>
+              <td class="amount">{{ money(o.total) }}</td>
+              <td>
+                <span
+                  class="badge"
+                  [class.success]="o.paid"
+                  [class.orange]="!o.paid"
+                  >{{ o.paid ? "Pagado" : "Pendiente" }}</span
+                >
+              </td>
+              <td>{{ o.delivery }}</td>
+              <td>
+                <a class="text-link" [routerLink]="['/admin/pedidos', o.id]"
+                  >Ver detalle ↗</a
+                >
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table></ly-data-table
+    >
+  } @else {
+    <ly-empty-state />
+  }
+</section>

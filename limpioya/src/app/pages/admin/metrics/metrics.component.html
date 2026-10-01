@@ -1,0 +1,58 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Administración / Métricas</div>
+    <h1>Métricas y resultados</h1>
+    <p>Una mirada sencilla al desempeño de tu lavandería.</p>
+  </div>
+  <div class="tabs" role="group" aria-label="Período de métricas">
+    @for (p of periods; track p) {
+      <button
+        [class.selected]="period() === p"
+        [attr.aria-pressed]="period() === p"
+        (click)="period.set(p)"
+      >
+        {{ p }}
+      </button>
+    }
+  </div>
+</div>
+<div class="stats-grid">
+  <ly-stat-card
+    label="Total de pedidos"
+    [value]="orders().length"
+    [hint]="period()"
+    icon="bag"
+  /><ly-stat-card
+    label="Pedidos completados"
+    [value]="completed()"
+    hint="Entregados"
+    icon="check"
+    tone="teal"
+  /><ly-stat-card
+    label="Tiempo de entrega"
+    [value]="average()"
+    hint="Promedio de entregas mock"
+    icon="clock"
+  /><ly-stat-card
+    label="Ingresos"
+    [value]="income()"
+    hint="Pagos aprobados · COP"
+    icon="chart"
+    tone="teal"
+  /><ly-stat-card
+    label="Clientes"
+    [value]="customerCount()"
+    hint="Con pedidos en el período"
+    icon="users"
+  /><ly-stat-card
+    label="Más solicitado"
+    [value]="popular()"
+    hint="Por cantidad de prendas"
+    icon="shirt"
+  />
+</div>
+<ly-charts [orders]="orders()" />
+<div class="notice-box">
+  Métricas de demostración calculadas con los pedidos locales. El tiempo de
+  entrega utiliza las fechas mock del pedido y su entrega estimada.
+</div>

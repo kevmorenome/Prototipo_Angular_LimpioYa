@@ -1,0 +1,124 @@
+:host {
+  display: block;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 245px;
+  background: #fff;
+  border-right: 1px solid var(--line);
+  padding: 30px 20px 15px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar ly-brand {
+  padding: 0 10px;
+}
+.workspace-label {
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  color: #95a2b3;
+  font-weight: 800;
+  padding: 35px 14px 14px;
+}
+.sidebar nav {
+  display: grid;
+  gap: 7px;
+}
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #6f7d90;
+  font-weight: 500;
+}
+.sidebar nav a.active {
+  background: #eaf3ff;
+  color: var(--blue);
+  font-weight: 700;
+}
+.sidebar nav a:hover {
+  background: #f4f8fc;
+}
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 25px;
+}
+.demo-note {
+  background: linear-gradient(120deg, #f0f7ff, #eff9f8);
+  padding: 18px;
+  border-radius: 12px;
+  font-size: 12px;
+  position: relative;
+}
+.demo-note > ly-icon {
+  color: var(--blue);
+  margin-bottom: 6px;
+}
+.demo-note strong {
+  display: block;
+  font-size: 13px;
+}
+.demo-note p {
+  line-height: 1.6;
+  margin: 7px 0 13px;
+}
+.demo-note > span {
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  color: var(--blue);
+  font-weight: 700;
+}
+.sidebar-bottom > button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  width: 100%;
+  padding: 24px 15px 15px;
+  color: #738198;
+  font-size: 14px;
+}
+.sidebar-version {
+  font-size: 10px;
+  color: #acb6c2;
+  text-align: center;
+  margin-top: 10px;
+}
+@media (max-width: 1150px) {
+  .sidebar {
+    width: 215px;
+    padding-inline: 15px;
+  }
+}
+@media (max-width: 800px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 245px;
+    transition: 0.2s;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+.sidebar-version {
+  font-size: 12px;
+}
+.demo-note {
+  font-size: 13px;
+}
+.workspace-label {
+  font-size: 12px;
+}
+@media (max-width: 520px) {
+  .demo-note > span {
+    font-size: 10px;
+  }
+}

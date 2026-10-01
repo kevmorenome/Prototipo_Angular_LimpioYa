@@ -1,0 +1,8 @@
+@if (service(); as s) {
+  <article class="service-card">
+    <span class="stat-icon"><ly-icon name="shirt" /></span>
+    <h3>{{ s.name }}</h3>
+    <p>{{ s.description }}</p>
+    <strong>{{ money(s.price) }} <small>/ prenda</small></strong>
+  </article>
+}

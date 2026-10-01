@@ -1,0 +1,9 @@
+<span
+  class="badge"
+  [class.success]="
+    status() === 'Entregado' || status() === 'Listo para entrega'
+  "
+  [class.orange]="status() === 'Recibido' || status() === 'Confirmado'"
+  [class.purple]="status() === 'En reparto'"
+  ><i></i>{{ status() }}</span
+>

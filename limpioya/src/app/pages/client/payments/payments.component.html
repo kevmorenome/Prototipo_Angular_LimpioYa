@@ -1,0 +1,126 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Mi espacio / Pagos y facturas</div>
+    <h1>Pagos y Facturas</h1>
+    <p>Gestiona tus pagos y consulta los comprobantes de tus pedidos.</p>
+  </div>
+  <span class="badge"><ly-icon name="shield" />Pagos simulados</span>
+</div>
+<div class="notice-box">
+  Demo — todos los pagos son simulados. No se solicitan datos bancarios ni se
+  realizan cobros.
+</div>
+<section class="panel">
+  @if (orders().length) {
+    <ly-data-table
+      ><table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Estado del pago</th>
+            <th>Método</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (o of orders(); track o.id) {
+            <tr>
+              <td class="order-id">{{ o.id }}</td>
+              <td>{{ o.date }}</td>
+              <td class="amount">{{ money(o.total) }}</td>
+              <td>
+                <span
+                  class="badge"
+                  [class.success]="o.paid"
+                  [class.orange]="!o.paid"
+                  >{{ o.paid ? "Pagado" : "Pendiente" }}</span
+                >
+              </td>
+              <td>{{ o.method }}</td>
+              <td>
+                @if (o.paid) {
+                  <button class="text-link" (click)="invoice.set(o)">
+                    Ver factura ↗
+                  </button>
+                } @else {
+                  <button class="btn primary" (click)="open(o)">Pagar</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table></ly-data-table
+    >
+  } @else {
+    <ly-empty-state
+      title="No hay pagos todavía"
+      text="Crea tu primer pedido para ver sus pagos aquí."
+    />
+  }
+</section>
+@if (selected(); as o) {
+  <ly-modal title="Simular pago" (close)="selected.set(null)"
+    ><p>{{ o.id }} · {{ money(o.total) }}</p>
+    <label
+      >Método de pago<select [(ngModel)]="method">
+        <option>Tarjeta</option>
+        <option>PSE</option>
+        <option>Billetera digital</option>
+        <option>Efectivo</option>
+      </select></label
+    ><label
+      >Resultado de la simulación<select [(ngModel)]="result">
+        <option>Pago aprobado</option>
+        <option>Pago rechazado</option>
+      </select></label
+    >
+    <div class="notice-box">
+      No ingreses datos de tarjetas ni claves. Esta operación solo actualiza el
+      prototipo.
+    </div>
+    <button class="btn primary full" (click)="pay()">
+      Confirmar pago simulado
+    </button></ly-modal
+  >
+}
+@if (invoice(); as o) {
+  <ly-modal title="Factura del pedido" (close)="invoice.set(null)"
+    ><article class="invoice">
+      <div class="invoice-heading">
+        <ly-brand /><span class="paid-stamp">PAGADO</span>
+      </div>
+      <span class="eyebrow">FACTURA DE DEMOSTRACIÓN</span>
+      <h3>{{ o.id }}</h3>
+      <div class="summary-row">
+        <span>Cliente</span><strong>{{ o.client }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Fecha de emisión</span><strong>{{ o.paidAt || o.date }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Método de pago</span><strong>{{ o.method }}</strong>
+      </div>
+      @for (l of o.lines; track $index) {
+        <div class="line-item">
+          <div>
+            <strong>{{ l.service }} · {{ l.garment }}</strong>
+            <p>{{ l.quantity }} × {{ money(l.price) }}</p>
+          </div>
+          <strong>{{ money(l.quantity * l.price) }}</strong>
+        </div>
+      }
+      <div class="summary-row summary-total">
+        <span>Total</span><strong>{{ money(o.total) }}</strong>
+      </div>
+      <div class="invoice-footer">
+        LimpioYa — Gracias por confiar en nosotros.<br />Documento académico sin
+        validez fiscal. No se realizó un cobro real.
+      </div>
+    </article>
+    <button class="btn secondary full print-hide" (click)="print()">
+      Imprimir / Guardar como PDF
+    </button></ly-modal
+  >
+}

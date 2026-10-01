@@ -1,0 +1,55 @@
+<div class="page-heading">
+  <div>
+    <div class="breadcrumb">Administración / Dashboard</div>
+    <h1>Una vista de tu lavandería</h1>
+    <p>Pedidos, clientes y resultados. Todo bajo control.</p>
+  </div>
+  <a class="btn primary" routerLink="/admin/pedidos"
+    ><ly-icon name="bag" />Gestionar pedidos</a
+  >
+</div>
+<div class="stats-grid five">
+  <ly-stat-card
+    label="Pedidos activos"
+    [value]="active()"
+    hint="En proceso"
+    icon="bag"
+  /><ly-stat-card
+    label="Completados"
+    [value]="completed()"
+    hint="Entregados al cliente"
+    icon="check"
+    tone="teal"
+  /><ly-stat-card
+    label="Clientes"
+    [value]="clients.records().length"
+    hint="Registrados en la demo"
+    icon="users"
+  /><ly-stat-card
+    label="Ingresos"
+    [value]="income()"
+    hint="Pagos aprobados · COP"
+    icon="chart"
+    tone="teal"
+  /><ly-stat-card
+    label="Pagos pendientes"
+    [value]="pending()"
+    hint="Por confirmar"
+    icon="wallet"
+  />
+</div>
+<ly-charts [orders]="store.records()" />
+<section class="panel orders-panel">
+  <div class="panel-heading">
+    <div>
+      <h2>Pedidos recientes</h2>
+      <p>Última actividad de la lavandería</p>
+    </div>
+    <a class="text-link" routerLink="/admin/pedidos">Ver todos →</a>
+  </div>
+  <ly-order-table
+    [orders]="store.records().slice().sort(recentOrders).slice(0, 5)"
+    [admin]="true"
+    base="/admin/pedidos"
+  />
+</section>
